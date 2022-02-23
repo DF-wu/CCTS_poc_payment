@@ -1,0 +1,23 @@
+server:
+  port: 58081
+serviceInfo:
+  name: "PaymentService"
+  destinations:
+    - paymentService
+    - updatePointService
+    - loggingService
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://pdvps:pdvps-soselab@140.121.196.23:10104/payment_service?authSource=payment_service&readPreference=primary&appname=MongoDB%20Compass&ssl=false
+  rabbitmq:
+    username: 'soselab'
+    password: 'soselab401'
+    host: 140.121.196.23
+    port: 10109
+    virtual-host: /
+    listener:
+      simple:
+        # 手動ack, 確保訊息完整處理
+        acknowledge-mode: manual
