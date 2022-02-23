@@ -3,7 +3,7 @@ package tw.dfder.ccts_poc_payment.Entity;
 public class PaymentMessageEnvelope {
     String paymentID;
     String buyerID;
-    String totalAmount;
+    int totalAmount;
     boolean isValid;
 
     public String getPaymentID() {
@@ -22,11 +22,11 @@ public class PaymentMessageEnvelope {
         this.buyerID = buyerID;
     }
 
-    public String getTotalAmount() {
+    public int getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(String totalAmount) {
+    public void setTotalAmount(int totalAmount) {
         this.totalAmount = totalAmount;
     }
 
