@@ -15,6 +15,8 @@ import tw.dfder.ccts_poc_payment.configuration.RabbitmqConfig;
 import tw.dfder.ccts_poc_payment.configuration.ServiceConfig;
 import tw.dfder.ccts_poc_payment.repository.PaymentRepo;
 
+import java.io.IOException;
+
 @EnableRabbit
 @Service("MessageListener")
 public class MessageListener {
@@ -34,15 +36,17 @@ public class MessageListener {
     @RabbitListener(queues = {
             RabbitmqConfig.QUEUE_PAYMENT_REQUEST
     })
-    public void receivedRequest(String msg, @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel ch){
+    public void receivedRequest(String msg, @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel ch) throws IOException {
 //        decode the message
         PaymentMessageEnvelope receivedMessage = gson.fromJson(msg, PaymentMessageEnvelope.class);
-
-
+        System.out.println("get a msg!!" + receivedMessage);
+        ch.basicAck(deliveryTag, false);
         if (receivedMessage.getMethod().equals("pay")){
             paymentProcess(receivedMessage);
         }else if(receivedMessage.getMethod().equals("get")){
             queryProcess(receivedMessage);
+        }else {
+            System.out.println(receivedMessage);
         }
 
 
@@ -62,7 +66,7 @@ public class MessageListener {
             // send msg
             sender.sendRequestMessage(
                     gson.toJson(paymentMessageEnvelope),
-                    ServiceConfig.destinations.get(0),
+                    "orchestrator",
                     RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
                     ServiceConfig.serviceName
             );
@@ -77,7 +81,7 @@ public class MessageListener {
 
             sender.sendRequestMessage(
                     gson.toJson(paymentMessageEnvelope),
-                    ServiceConfig.destinations.get(3),
+                    "orchestrator",
                     RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
                     ServiceConfig.serviceName
             );
@@ -89,10 +93,11 @@ public class MessageListener {
     // find by paymentid
     public void queryProcess(PaymentMessageEnvelope receivedMessage){
 
-        repo.findByPaymentId(receivedMessage.getPaymentId());
+        PaymentMessageEnvelope result = repo.findByPaymentId(receivedMessage.getPaymentId());
+        System.out.println("!!!!!" + result.toString());
         sender.sendRequestMessage(
-                gson.toJson(receivedMessage),
-                ServiceConfig.destinations.get(3),
+                gson.toJson(result),
+                "orchestrator",
                 RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
                 ServiceConfig.serviceName
         );

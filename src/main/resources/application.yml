@@ -10,7 +10,7 @@ serviceInfo:
 spring:
   data:
     mongodb:
-      uri: mongodb://pdvps:pdvps-soselab@140.121.196.23:10104/payment_service?authSource=payment_service&readPreference=primary&appname=MongoDB%20Compass&ssl=false
+      uri: mongodb+srv://df:dfder@clusters.owt5s.mongodb.net/CCTS?retryWrites=true&w=majority
   rabbitmq:
     username: 'soselab'
     password: 'soselab401'
