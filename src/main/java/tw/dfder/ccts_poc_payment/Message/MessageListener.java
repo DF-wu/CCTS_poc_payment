@@ -56,7 +56,7 @@ public class MessageListener {
             paymentMessageEnvelope.setValid(false);
             sender.sendRequestMessage(
                     gson.toJson(paymentMessageEnvelope),
-                    ServiceConfig.destinations.get(0),
+                    ServiceConfig.destinations.get(3),
                     RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
                     ServiceConfig.serviceName
             );
