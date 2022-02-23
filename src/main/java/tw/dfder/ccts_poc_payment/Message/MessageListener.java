@@ -13,35 +13,52 @@ import org.springframework.stereotype.Service;
 import tw.dfder.ccts_poc_payment.Entity.PaymentMessageEnvelope;
 import tw.dfder.ccts_poc_payment.configuration.RabbitmqConfig;
 import tw.dfder.ccts_poc_payment.configuration.ServiceConfig;
+import tw.dfder.ccts_poc_payment.repository.PaymentRepo;
 
 @EnableRabbit
 @Service("MessageListener")
 public class MessageListener {
     private final Gson gson;
     private final CCTSMessageSender sender;
+    private final PaymentRepo repo;
+
 
     @Autowired
-    public MessageListener(Gson gson, CCTSMessageSender sender) {
+    public MessageListener(Gson gson, CCTSMessageSender sender, PaymentRepo repo) {
         this.gson = gson;
         this.sender = sender;
+        this.repo = repo;
     }
 
 
     @RabbitListener(queues = {
             RabbitmqConfig.QUEUE_PAYMENT_REQUEST
     })
-    public void receivedMessageFromPayment(String msg, @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel ch){
+    public void receivedRequest(String msg, @Header(AmqpHeaders.DELIVERY_TAG) long deliveryTag, Channel ch){
 //        decode the message
         PaymentMessageEnvelope receivedMessage = gson.fromJson(msg, PaymentMessageEnvelope.class);
 
 
-        if (receivedMessage.getPaymentID() != null && receivedMessage.getBuyerID() != null && receivedMessage.isValid()) {
+        if (receivedMessage.getMethod().equals("pay")){
+            paymentProcess(receivedMessage);
+        }else if(receivedMessage.getMethod().equals("get")){
+            queryProcess(receivedMessage);
+        }
+
+
+    }
+
+
+    public void paymentProcess(PaymentMessageEnvelope receivedMessage){
+
+        if (receivedMessage.getPaymentId() != null && receivedMessage.getBuyerId() != null && receivedMessage.isValid()) {
             // return a valid result
             PaymentMessageEnvelope paymentMessageEnvelope = new PaymentMessageEnvelope();
-            paymentMessageEnvelope.setPaymentID(receivedMessage.getPaymentID());
-            paymentMessageEnvelope.setBuyerID(receivedMessage.getBuyerID());
+            paymentMessageEnvelope.setPaymentId(receivedMessage.getPaymentId());
+            paymentMessageEnvelope.setBuyerId(receivedMessage.getBuyerId());
             paymentMessageEnvelope.setValid(receivedMessage.isValid());
 
+            repo.save(paymentMessageEnvelope);
             // send msg
             sender.sendRequestMessage(
                     gson.toJson(paymentMessageEnvelope),
@@ -50,10 +67,14 @@ public class MessageListener {
                     ServiceConfig.serviceName
             );
         }else {
+
             PaymentMessageEnvelope paymentMessageEnvelope = new PaymentMessageEnvelope();
-            paymentMessageEnvelope.setPaymentID(receivedMessage.getPaymentID());
-            paymentMessageEnvelope.setBuyerID(receivedMessage.getBuyerID());
+            paymentMessageEnvelope.setPaymentId(receivedMessage.getPaymentId());
+            paymentMessageEnvelope.setBuyerId(receivedMessage.getBuyerId());
             paymentMessageEnvelope.setValid(false);
+
+            repo.save(paymentMessageEnvelope);
+
             sender.sendRequestMessage(
                     gson.toJson(paymentMessageEnvelope),
                     ServiceConfig.destinations.get(3),
@@ -61,7 +82,24 @@ public class MessageListener {
                     ServiceConfig.serviceName
             );
         }
+    }
+
+
+
+    // find by paymentid
+    public void queryProcess(PaymentMessageEnvelope receivedMessage){
+
+        repo.findByPaymentId(receivedMessage.getPaymentId());
+        sender.sendRequestMessage(
+                gson.toJson(receivedMessage),
+                ServiceConfig.destinations.get(3),
+                RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
+                ServiceConfig.serviceName
+        );
 
 
     }
+
+
+
 }
