@@ -61,7 +61,7 @@ public class MessageListener {
             paymentMessageEnvelope.setPaymentId(receivedMessage.getPaymentId());
             paymentMessageEnvelope.setBuyerId(receivedMessage.getBuyerId());
             paymentMessageEnvelope.setValid(receivedMessage.isValid());
-
+            paymentMessageEnvelope.setTotalAmount(receivedMessage.getTotalAmount());
             repo.save(paymentMessageEnvelope);
             // send msg
             sender.sendRequestMessage(
@@ -76,7 +76,7 @@ public class MessageListener {
             paymentMessageEnvelope.setPaymentId(receivedMessage.getPaymentId());
             paymentMessageEnvelope.setBuyerId(receivedMessage.getBuyerId());
             paymentMessageEnvelope.setValid(false);
-
+            paymentMessageEnvelope.setTotalAmount(receivedMessage.getTotalAmount());
             repo.save(paymentMessageEnvelope);
 
             sender.sendRequestMessage(

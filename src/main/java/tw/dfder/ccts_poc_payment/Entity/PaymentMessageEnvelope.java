@@ -8,7 +8,6 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class PaymentMessageEnvelope {
     @Id
     private String Id;
-
     // "get", "pay"
     @Field
     String method;
