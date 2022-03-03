@@ -7,6 +7,7 @@ import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.messaging.handler.annotation.Header;
 
 import org.springframework.stereotype.Service;
@@ -41,15 +42,32 @@ public class MessageListener {
         PaymentMessageEnvelope receivedMessage = gson.fromJson(msg, PaymentMessageEnvelope.class);
         System.out.println("get a msg!!" + receivedMessage);
         ch.basicAck(deliveryTag, false);
+
         if (receivedMessage.getMethod().equals("pay")){
             paymentProcess(receivedMessage);
         }else if(receivedMessage.getMethod().equals("get")){
             queryProcess(receivedMessage);
-        }else {
+        }else if(receivedMessage.getMethod().equals("rollback")){
+            rollbackPayment(receivedMessage);
+        }
+        else{
             System.out.println(receivedMessage);
         }
 
 
+    }
+
+    // rollback
+    private void rollbackPayment(PaymentMessageEnvelope receivedMessage) {
+        repo.deleteByPaymentId(receivedMessage.getPaymentId());
+        System.out.println("deleted. pid: " + receivedMessage.getPaymentId());
+        receivedMessage.setMethod("rollback");
+        sender.sendRequestMessage(
+                gson.toJson(receivedMessage),
+                "orchestrator",
+                RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
+                ServiceConfig.serviceName
+        );
     }
 
 
@@ -62,6 +80,7 @@ public class MessageListener {
             paymentMessageEnvelope.setBuyerId(receivedMessage.getBuyerId());
             paymentMessageEnvelope.setValid(receivedMessage.isValid());
             paymentMessageEnvelope.setTotalAmount(receivedMessage.getTotalAmount());
+            paymentMessageEnvelope.setMethod("pay");
             repo.save(paymentMessageEnvelope);
             // send msg
             sender.sendRequestMessage(

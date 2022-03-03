@@ -8,5 +8,6 @@ import tw.dfder.ccts_poc_payment.Entity.PaymentMessageEnvelope;
 @Repository
 public interface PaymentRepo extends MongoRepository<PaymentMessageEnvelope,String> {
     PaymentMessageEnvelope findByPaymentId(String pid);
+    PaymentMessageEnvelope deleteByPaymentId(String pid);
 
 }
