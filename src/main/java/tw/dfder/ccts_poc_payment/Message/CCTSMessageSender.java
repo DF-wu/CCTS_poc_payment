@@ -14,10 +14,11 @@ import tw.dfder.ccts_poc_payment.configuration.ServiceConfig;
 @Service("CCTSMessageSender")
 public class CCTSMessageSender {
     private final RabbitTemplate rabbitTemplate;
-
+    private final ServiceConfig serviceConfig;
     @Autowired
-    public CCTSMessageSender(RabbitTemplate rabbitTemplate, Gson gson) {
+    public CCTSMessageSender(RabbitTemplate rabbitTemplate, Gson gson, ServiceConfig serviceConfig) {
         this.rabbitTemplate = rabbitTemplate;
+        this.serviceConfig = serviceConfig;
     }
 
     public boolean sendRequestMessage(String message, String destination, String routingKey, String pactName){
@@ -31,7 +32,7 @@ public class CCTSMessageSender {
                     routingKey,
                     message,
                     m -> {
-                        m.getMessageProperties().getHeaders().put("source", ServiceConfig.serviceName);
+                        m.getMessageProperties().getHeaders().put("source", serviceConfig.serviceName);
                         m.getMessageProperties().getHeaders().put("destination", destination );
                         m.getMessageProperties().getHeaders().put("pact", pactName);
                         return m;
