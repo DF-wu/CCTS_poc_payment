@@ -7,7 +7,6 @@ import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.support.AmqpHeaders;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.messaging.handler.annotation.Header;
 
 import org.springframework.stereotype.Service;
@@ -24,13 +23,14 @@ public class MessageListener {
     private final Gson gson;
     private final CCTSMessageSender sender;
     private final PaymentRepo repo;
-
+    private final ServiceConfig serviceConfig;
 
     @Autowired
-    public MessageListener(Gson gson, CCTSMessageSender sender, PaymentRepo repo) {
+    public MessageListener(Gson gson, CCTSMessageSender sender, PaymentRepo repo, ServiceConfig serviceConfig) {
         this.gson = gson;
         this.sender = sender;
         this.repo = repo;
+        this.serviceConfig = serviceConfig;
     }
 
 
@@ -66,7 +66,7 @@ public class MessageListener {
                 gson.toJson(receivedMessage),
                 "orchestrator",
                 RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
-                ServiceConfig.serviceName
+                serviceConfig.serviceName
         );
     }
 
@@ -87,7 +87,7 @@ public class MessageListener {
                     gson.toJson(paymentMessageEnvelope),
                     "orchestrator",
                     RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
-                    ServiceConfig.serviceName
+                    serviceConfig.serviceName
             );
         }else {
 
@@ -102,7 +102,7 @@ public class MessageListener {
                     gson.toJson(paymentMessageEnvelope),
                     "orchestrator",
                     RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
-                    ServiceConfig.serviceName
+                    serviceConfig.serviceName
             );
         }
     }
@@ -118,7 +118,7 @@ public class MessageListener {
                 gson.toJson(result),
                 "orchestrator",
                 RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
-                ServiceConfig.serviceName
+                serviceConfig.serviceName
         );
 
 
