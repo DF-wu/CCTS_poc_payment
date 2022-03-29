@@ -10,7 +10,7 @@
     </parent>
     <groupId>tw.dfder</groupId>
     <artifactId>CCTS_poc_payment</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>CCTS_poc_payment</name>
     <description>CCTS_poc_payment</description>
     <properties>
