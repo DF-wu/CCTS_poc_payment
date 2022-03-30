@@ -5,11 +5,6 @@
   "messages": [
     {
       "description": "request payment",
-      "generators": {
-        "metadata": {
-
-        }
-      },
       "metaData": {
         "destination": "paymentService",
         "source": "orchestrator"
