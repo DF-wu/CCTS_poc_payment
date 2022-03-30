@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class FromOrchestratorTest {
 
     @Pact(consumer = "paymentService")
-    public MessagePact validateMessageFromOrchestra(MessagePactBuilder builder) {
+    public MessagePact validateMessageFromOrchestrator(MessagePactBuilder builder) {
         return builder
                 .expectsToReceive("response payment")
                 .withMetadata(m -> {
@@ -33,8 +33,8 @@ public class FromOrchestratorTest {
     }
 
     @Test
-    @PactTestFor(pactMethod = "validateReceivedFromPointServiceMessageBuilder")
-    public void validateReceivedFromPointServiceMessageBuilderTest(List<Message> messages) {
+    @PactTestFor(pactMethod = "validateMessageFromOrchestrator")
+    public void validateMessageFromOrchestratorTest(List<Message> messages) {
 
         // 起碼有上面的案例吧
         assertThat(messages).isNotEmpty();
