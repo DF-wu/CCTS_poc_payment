@@ -23,10 +23,10 @@ public class FromOrchestratorTest {
     @Pact(consumer = "paymentService")
     public MessagePact validateMessageFromOrchestrator(MessagePactBuilder builder) {
         return builder
-                .expectsToReceive("response payment")
+                .expectsToReceive("request payment")
                 .withMetadata(m -> {
-                    m.add("source", "pointService");
-                    m.add("destination", "orchestrator");
+                    m.add("source", "orchestrator");
+                    m.add("destination", "paymentService");
                 })
                 .toPact();
 
