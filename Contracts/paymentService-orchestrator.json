@@ -1,6 +1,6 @@
 {
   "consumer": {
-    "name": "orchestrator"
+    "name": "paymentService"
   },
   "messages": [
     {
@@ -25,6 +25,6 @@
     }
   },
   "provider": {
-    "name": "paymentService"
+    "name": "orchestrator"
   }
 }
