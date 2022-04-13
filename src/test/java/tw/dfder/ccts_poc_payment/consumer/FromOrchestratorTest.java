@@ -23,10 +23,10 @@ public class FromOrchestratorTest {
     @Pact(consumer = "paymentService")
     public MessagePact validateMessageFromOrchestrator(MessagePactBuilder builder) {
         return builder
-                .expectsToReceive("request payment")
+                .expectsToReceive("t-orc-payment-01")   
                 .withMetadata(m -> {
-                    m.add("source", "orchestrator");
-                    m.add("destination", "paymentService");
+                    m.add("provider", "orchestrator");
+                    m.add("consumer", "paymentService");
                 })
                 .toPact();
 
@@ -40,8 +40,8 @@ public class FromOrchestratorTest {
         assertThat(messages).isNotEmpty();
         // 驗header
         messages.forEach(m -> {
-            assertThat(m.getMetadata()).hasFieldOrProperty("source");
-            assertThat(m.getMetadata()).hasFieldOrProperty("destination");
+            assertThat(m.getMetadata()).hasFieldOrProperty("provider");
+            assertThat(m.getMetadata()).hasFieldOrProperty("consumer");
         });
 
     }

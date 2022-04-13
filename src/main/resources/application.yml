@@ -4,7 +4,7 @@ serviceinfo:
   name: "PaymentService"
   destinations:
     - paymentService
-    - updatePointService
+    - pointService
     - loggingService
     - orchestrator
 spring:

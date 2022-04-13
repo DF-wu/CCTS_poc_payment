@@ -40,7 +40,7 @@ public class ToOrchestratorTest {
     }
 
 
-    @PactVerifyProvider("response payment")
+    @PactVerifyProvider("t-payment-orc-01")
     public MessageAndMetadata verifyMessageOfPayment() {
 
         Gson gson = new Gson();
@@ -52,8 +52,8 @@ public class ToOrchestratorTest {
         msg.setMethod("response");
 
         HashMap<String, String> props = new HashMap<>();
-        props.put("source", "paymentService");
-        props.put("destination","orchestrator");
+        props.put("provider", "paymentService");
+        props.put("consumer","orchestrator");
         return new MessageAndMetadata(gson.toJson(msg).getBytes(), props);
     }
 

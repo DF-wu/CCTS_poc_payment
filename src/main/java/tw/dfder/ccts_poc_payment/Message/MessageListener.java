@@ -66,7 +66,7 @@ public class MessageListener {
                 gson.toJson(receivedMessage),
                 "orchestrator",
                 RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
-                serviceConfig.serviceName
+                "rollback "
         );
     }
 
@@ -87,7 +87,7 @@ public class MessageListener {
                     gson.toJson(paymentMessageEnvelope),
                     "orchestrator",
                     RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
-                    serviceConfig.serviceName
+                    "t-payment-orc-01"
             );
         }else {
 
@@ -102,7 +102,7 @@ public class MessageListener {
                     gson.toJson(paymentMessageEnvelope),
                     "orchestrator",
                     RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
-                    serviceConfig.serviceName
+                    "t-payment-orc-01"
             );
         }
     }
@@ -118,7 +118,7 @@ public class MessageListener {
                 gson.toJson(result),
                 "orchestrator",
                 RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
-                serviceConfig.serviceName
+                "queryProcess"
         );
 
 
