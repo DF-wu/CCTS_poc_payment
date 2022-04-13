@@ -4,15 +4,15 @@
   },
   "messages": [
     {
-      "description": "request payment",
+      "description": "t-orc-payment-01",
       "generators": {
         "metadata": {
 
         }
       },
       "metaData": {
-        "destination": "paymentService",
-        "source": "orchestrator"
+        "consumer": "paymentService",
+        "provider": "orchestrator"
       }
     }
   ],
