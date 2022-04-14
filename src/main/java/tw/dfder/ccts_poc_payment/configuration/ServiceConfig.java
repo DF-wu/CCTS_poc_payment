@@ -13,7 +13,7 @@ import java.util.List;
  * @version v2
  */
 @Configuration
-@ConfigurationProperties(prefix = "serviceinfo")
+@ConfigurationProperties(prefix = "serviceInfo")
 public class ServiceConfig {
 
     public String serviceName;

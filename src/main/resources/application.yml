@@ -1,7 +1,7 @@
 server:
   port: 58081
-serviceinfo:
-  name: "PaymentService"
+serviceInfo:
+  name: "paymentService"
   destinations:
     - paymentService
     - pointService
