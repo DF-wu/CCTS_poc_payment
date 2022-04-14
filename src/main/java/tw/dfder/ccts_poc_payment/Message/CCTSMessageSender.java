@@ -32,7 +32,7 @@ public class CCTSMessageSender {
                     routingKey,
                     message,
                     m -> {
-                        m.getMessageProperties().getHeaders().put("provider", serviceConfig.serviceName);
+                        m.getMessageProperties().getHeaders().put("provider", serviceConfig.name);
                         m.getMessageProperties().getHeaders().put("consumer", destination );
                         m.getMessageProperties().getHeaders().put("testCaseId", contractTerm);
                         return m;
