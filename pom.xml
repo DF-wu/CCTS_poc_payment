@@ -85,6 +85,33 @@
 
     </dependencies>
 
+
+
+    <!--    use google asia maven mirror-->
+    <repositories>
+        <repository>
+            <id>google-maven-central</id>
+            <name>GCS Maven Central mirror Asia Pacific</name>
+            <url>https://maven-central-asia.storage-download.googleapis.com/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>google-maven-central</id>
+            <name>GCS Maven Central mirror Asia Pacific</name>
+            <url>https://maven-central-asia.storage-download.googleapis.com/maven2/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
     <build>
         <plugins>
             <plugin>
