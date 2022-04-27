@@ -62,13 +62,13 @@ public class MessageListener {
     private void rollbackPayment(PaymentMessageEnvelope receivedMessage) {
         repo.deleteByPaymentId(receivedMessage.getPaymentId());
         System.out.println("deleted. pid: " + receivedMessage.getPaymentId());
-        receivedMessage.setMethod("rollback");
+        receivedMessage.setMethod("rollback res");
         sender.sendRequestMessage(
                 gson.toJson(receivedMessage),
                 "orchestrator",
                 RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
-                "t-payment-orc-02",
-                "7"
+                "t-payment-orc-04",
+                "13"
         );
     }
 
@@ -98,15 +98,17 @@ public class MessageListener {
             paymentMessageEnvelope.setPaymentId(receivedMessage.getPaymentId());
             paymentMessageEnvelope.setBuyerId(receivedMessage.getBuyerId());
             paymentMessageEnvelope.setValid(false);
+            paymentMessageEnvelope.setMethod("rollback");
             paymentMessageEnvelope.setTotalAmount(receivedMessage.getTotalAmount());
             repo.save(paymentMessageEnvelope);
-//
-//            sender.sendRequestMessage(
-//                    gson.toJson(paymentMessageEnvelope),
-//                    "orchestrator",
-//                    RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
-//                    "t-payment-orc-01"
-//            );
+
+            sender.sendRequestMessage(
+                    gson.toJson(paymentMessageEnvelope),
+                    "orchestrator",
+                    RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
+                    "t-payment-orc-02",
+                    "7"
+            );
         }
     }
 
