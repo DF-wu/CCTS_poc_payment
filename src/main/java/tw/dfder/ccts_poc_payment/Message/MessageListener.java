@@ -67,7 +67,7 @@ public class MessageListener {
                 gson.toJson(receivedMessage),
                 "orchestrator",
                 RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
-                "t-payment-orc-04",
+                "t-payment-orc-03",
                 "13"
         );
     }

@@ -36,7 +36,7 @@ public class ToOrchestratorTest {
     void before(PactVerificationContext context) {
         context.setTarget(new MessageTestTarget());
         System.setProperty("pact.verifier.publishResults", "true");
-        System.setProperty("pact.provider.version", "v0.2");
+        System.setProperty("pact.provider.version", "v0.3");
     }
 
 
@@ -57,4 +57,41 @@ public class ToOrchestratorTest {
         return new MessageAndMetadata(gson.toJson(msg).getBytes(), props);
     }
 
+
+
+    @PactVerifyProvider("t-payment-orc-02")
+    public MessageAndMetadata verifyMessageOfPayment02() {
+
+        Gson gson = new Gson();
+        PaymentMessageEnvelope msg = new PaymentMessageEnvelope();
+        msg.setPaymentId(UUID.randomUUID().toString());
+        msg.setBuyerId(UUID.randomUUID().toString());
+        msg.setTotalAmount((int) (Math.random()*1000));
+        msg.setValid(true);
+        msg.setMethod("response");
+
+        HashMap<String, String> props = new HashMap<>();
+        props.put("provider", "paymentService");
+        props.put("consumer","orchestrator");
+        return new MessageAndMetadata(gson.toJson(msg).getBytes(), props);
+    }
+
+
+
+    @PactVerifyProvider("t-payment-orc-03")
+    public MessageAndMetadata verifyMessageOfPayment03() {
+
+        Gson gson = new Gson();
+        PaymentMessageEnvelope msg = new PaymentMessageEnvelope();
+        msg.setPaymentId(UUID.randomUUID().toString());
+        msg.setBuyerId(UUID.randomUUID().toString());
+        msg.setTotalAmount((int) (Math.random()*1000));
+        msg.setValid(true);
+        msg.setMethod("response");
+
+        HashMap<String, String> props = new HashMap<>();
+        props.put("provider", "paymentService");
+        props.put("consumer","orchestrator");
+        return new MessageAndMetadata(gson.toJson(msg).getBytes(), props);
+    }
 }
