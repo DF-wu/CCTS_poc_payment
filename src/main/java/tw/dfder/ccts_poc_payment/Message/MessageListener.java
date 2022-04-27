@@ -46,7 +46,8 @@ public class MessageListener {
         if (receivedMessage.getMethod().equals("pay")){
             paymentProcess(receivedMessage);
         }else if(receivedMessage.getMethod().equals("get")){
-            queryProcess(receivedMessage);
+            //
+//            queryProcess(receivedMessage);
         }else if(receivedMessage.getMethod().equals("rollback")){
             rollbackPayment(receivedMessage);
         }
@@ -66,7 +67,8 @@ public class MessageListener {
                 gson.toJson(receivedMessage),
                 "orchestrator",
                 RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
-                "rollback "
+                "t-payment-orc-02",
+                "7"
         );
     }
 
@@ -87,30 +89,34 @@ public class MessageListener {
                     gson.toJson(paymentMessageEnvelope),
                     "orchestrator",
                     RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
-                    "t-payment-orc-01"
+                    "t-payment-orc-01",
+                    "2"
             );
         }else {
-
+            // invalid
             PaymentMessageEnvelope paymentMessageEnvelope = new PaymentMessageEnvelope();
             paymentMessageEnvelope.setPaymentId(receivedMessage.getPaymentId());
             paymentMessageEnvelope.setBuyerId(receivedMessage.getBuyerId());
             paymentMessageEnvelope.setValid(false);
             paymentMessageEnvelope.setTotalAmount(receivedMessage.getTotalAmount());
             repo.save(paymentMessageEnvelope);
-
-            sender.sendRequestMessage(
-                    gson.toJson(paymentMessageEnvelope),
-                    "orchestrator",
-                    RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
-                    "t-payment-orc-01"
-            );
+//
+//            sender.sendRequestMessage(
+//                    gson.toJson(paymentMessageEnvelope),
+//                    "orchestrator",
+//                    RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
+//                    "t-payment-orc-01"
+//            );
         }
     }
 
 
 
     // find by paymentid
+
+    // dont use now
     public void queryProcess(PaymentMessageEnvelope receivedMessage){
+
 
         PaymentMessageEnvelope result = repo.findByPaymentId(receivedMessage.getPaymentId());
         System.out.println("!!!!!" + result.toString());
@@ -118,7 +124,8 @@ public class MessageListener {
                 gson.toJson(result),
                 "orchestrator",
                 RabbitmqConfig.ROUTING_PAYMENT_RESPONSE,
-                "queryProcess"
+                "queryProcess",
+                "nonono"
         );
 
 

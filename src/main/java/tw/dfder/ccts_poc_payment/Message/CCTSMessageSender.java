@@ -21,10 +21,10 @@ public class CCTSMessageSender {
         this.serviceConfig = serviceConfig;
     }
 
-    public boolean sendRequestMessage(String message, String destination, String routingKey, String contractTerm){
+    public boolean sendRequestMessage(String message, String destination, String routingKey, String testCaseId, String timeSequenceLabel){
 //        routingKey : routing key defined in RabbitmqConfig.java
 //        destination is the corresponding service name
-//        contractTerm is what the contract of the message belonging for
+//        testCaseId is what the contract of the message belonging for
 
         try {
             rabbitTemplate.convertAndSend(
@@ -34,7 +34,9 @@ public class CCTSMessageSender {
                     m -> {
                         m.getMessageProperties().getHeaders().put("provider", serviceConfig.name);
                         m.getMessageProperties().getHeaders().put("consumer", destination );
-                        m.getMessageProperties().getHeaders().put("testCaseId", contractTerm);
+                        m.getMessageProperties().getHeaders().put("testCaseId", testCaseId);
+                        m.getMessageProperties().getHeaders().put("timeSequenceLabel", timeSequenceLabel);
+                        m.getMessageProperties().getHeaders().put("CCTSTimestamp", System.currentTimeMillis());
                         return m;
                     }
             );
