@@ -5,6 +5,25 @@
   "messages": [
     {
       "description": "t-orc-payment-01",
+      "metaData": {
+        "consumer": "paymentService",
+        "provider": "orchestrator"
+      }
+    },
+    {
+      "description": "t-orc-payment-02",
+      "generators": {
+        "metadata": {
+
+        }
+      },
+      "metaData": {
+        "consumer": "paymentService",
+        "provider": "orchestrator"
+      }
+    },
+    {
+      "description": "t-orc-payment-03",
       "generators": {
         "metadata": {
 
